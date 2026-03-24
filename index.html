@@ -1,0 +1,828 @@
+<!DOCTYPE html><html lang="en" data-scrapbook-source="https://avalanche-bridge.github.io/" data-scrapbook-create="20260220101616703" data-scrapbook-title="Avalanche Bridge — How to Bridge to Avalanche, Fees, Supported Assets, Core Wallet, Security &amp; Troubleshooting (2026)"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+
+
+  <!-- SEO / EEAT Meta Tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Avalanche Bridge — How to Bridge to Avalanche, Fees, Supported Assets, Core Wallet, Security &amp; Troubleshooting (2026)</title>
+  <meta name="description" content="Avalanche Bridge guide (2026): what Avalanche Bridge is, how to bridge step-by-step (Core), fees &amp; fee caps, security model (SGX/wardens), supported chains/assets, C-Chain basics, explorers, best practices, and troubleshooting. Includes runbook, KPIs, and a deep FAQ.">
+  <meta name="author" content="Crypto Finance Experts">
+  <link rel="canonical" href="https://avalanche-bridge.example.com/">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="Avalanche_logo.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://avalanche-bridge.example.com/">
+  <meta property="og:title" content="Avalanche Bridge — Fees, Core, Security, Supported Assets &amp; Troubleshooting (2026)">
+  <meta property="og:description" content="Practical Avalanche Bridge guide: bridge to Avalanche safely, fees, security model, explorers, and troubleshooting.">
+  <meta property="og:image" content="avax.png">
+
+  <!-- Twitter Card -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://avalanche-bridge.example.com/">
+  <meta property="twitter:title" content="Avalanche Bridge — How to Bridge, Fees, Security &amp; Troubleshooting (2026)">
+  <meta property="twitter:description" content="Deep Avalanche Bridge guide: Core bridging flow, fees, SGX/wardens security model, explorers, safety best practices, and FAQs.">
+  <meta property="twitter:image" content="avax.png">
+
+  <style>
+    :root{
+      /* Avalanche-inspired Red Theme */
+      --primary:#E84142;        /* AVAX-like red */
+      --primary-600:#D63637;
+      --primary-700:#B92A2B;
+      --accent:#FF6B6B;         /* warm highlight */
+
+      --ink:#0F172A;            /* slate-900 */
+      --muted:#475569;          /* slate-600 */
+      --muted-2:#64748B;        /* slate-500 */
+
+      --bg:#FFF6F6;             /* warm near-white */
+      --panel:#FFFFFF;
+      --panel-2:#FFF9F9;
+      --line:rgba(15,23,42,.10);
+
+      --ok:#16A34A;
+      --warn:#F59E0B;
+      --error:#DC2626;
+
+      --shadow: 0 18px 44px rgba(2,6,23,.12);
+      --radius:14px;
+      --radius-lg:22px;
+
+      --gap:1.25rem;
+      --gap-lg:2rem;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      color:var(--muted);
+      background:
+        radial-gradient(900px 600px at 12% 0%, rgba(232,65,66,.14), transparent 60%),
+        radial-gradient(900px 600px at 90% 10%, rgba(255,107,107,.10), transparent 60%),
+        radial-gradient(900px 600px at 55% 85%, rgba(185,42,43,.10), transparent 60%),
+        linear-gradient(180deg, #FFFFFF 0%, var(--bg) 45%, #FFFFFF 100%);
+      line-height:1.65;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    a{color:var(--primary); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    img{max-width:100%; height:auto; display:block}
+    .container{max-width:1100px; margin:0 auto; padding:0 1.25rem}
+
+    h1,h2,h3,h4{color:var(--ink); line-height:1.25; margin:0 0 .6rem}
+    h1{
+      font-size:clamp(2rem,4.5vw,3.1rem);
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+    h2{
+      font-size:clamp(1.35rem,2.8vw,2rem);
+      margin-top:2.2rem;
+      padding-top:.6rem;
+      border-top:1px solid var(--line);
+    }
+    h3{
+      font-size:clamp(1.05rem,2.2vw,1.3rem);
+      color:#7F1D1D;
+      margin-top:1rem;
+    }
+
+    p,li,td,th{font-size:1rem}
+    .lead{font-size:1.125rem; color:#0F172A}
+    .muted{color:var(--muted)}
+    .muted-2{color:var(--muted-2)}
+
+    header.hero{
+      padding: clamp(2rem,6vw,4rem) 0;
+      background:
+        radial-gradient(700px 420px at 18% 10%, rgba(232,65,66,.18), transparent 60%),
+        radial-gradient(700px 420px at 90% 20%, rgba(255,107,107,.12), transparent 60%),
+        linear-gradient(180deg, rgba(2,6,23,.04), rgba(2,6,23,0) 55%);
+      border-bottom:1px solid var(--line);
+    }
+
+    .hero-grid{
+      display:grid;
+      gap:var(--gap-lg);
+      grid-template-columns:1fr;
+      align-items:stretch;
+    }
+
+    .hero-card{
+      background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,249,249,.88));
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      padding:clamp(1rem,3vw,1.75rem);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .brand-row{
+      display:flex; align-items:center; gap:.9rem;
+      margin-bottom:.75rem
+    }
+    .brand-logo{
+      width:54px;
+      height:54px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(232,65,66,.06);
+      padding:.35rem;
+      object-fit:contain;
+      box-shadow: 0 10px 22px rgba(2,6,23,.10);
+      flex:0 0 auto;
+    }
+
+    /* SINGLE CTA — centered, bigger, attractive */
+    .cta-center{
+      display:flex;
+      justify-content:center;
+      margin-top: 1.1rem;
+    }
+    .cta{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.65rem;
+      background: linear-gradient(180deg, var(--primary), var(--primary-700));
+      color:white;
+      padding:1.08rem 2.35rem;
+      border-radius:16px;
+      font-weight:950;
+      letter-spacing:.2px;
+      font-size:1.10rem;
+      border:1px solid rgba(255,255,255,.28);
+      box-shadow:
+        0 18px 44px rgba(232,65,66,.22),
+        0 0 0 6px rgba(232,65,66,.10);
+      transform: translateZ(0);
+      transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+      text-decoration:none;
+    }
+    .cta:hover{
+      text-decoration:none;
+      filter:brightness(1.05);
+      transform: translateY(-2px);
+      box-shadow:
+        0 22px 52px rgba(232,65,66,.26),
+        0 0 0 8px rgba(232,65,66,.12);
+    }
+    .cta:active{transform: translateY(0px); filter:brightness(.98);}
+
+    .note{
+      border-left:3px solid var(--primary);
+      padding:.85rem 1rem;
+      background:rgba(232,65,66,.06);
+      border-radius:12px;
+      color:#0F172A;
+      margin-top:1rem;
+    }
+
+    /* HERO IMAGE — framed, clean, no overflow */
+    .hero-media{
+      position:relative;
+      border-radius:var(--radius-lg);
+      border:1px solid var(--line);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      background:rgba(255,255,255,.75);
+    }
+    .hero-media::before{
+      content:"";
+      display:block;
+      padding-top:56.25%; /* 16:9 */
+    }
+    .hero-img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    section.step-guide{padding: clamp(2rem,6vw,3.5rem) 0}
+    .steps{display:grid; gap:var(--gap); grid-template-columns:1fr;}
+    .step{
+      background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,249,249,.88));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:1.2rem;
+      box-shadow: 0 12px 26px rgba(2,6,23,.10);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .step:hover{transform:translateY(-4px); box-shadow:0 18px 34px rgba(2,6,23,.14)}
+    .step .icon{
+      width:54px;height:54px;border-radius:50%;
+      display:inline-grid; place-items:center;
+      background:rgba(232,65,66,.10);
+      margin-bottom:.6rem;
+      color:#7F1D1D;
+      font-weight:950;
+      border:1px solid rgba(15,23,42,.10);
+    }
+
+    main .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,249,249,.88));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:1.25rem;
+      margin:1.25rem 0;
+      box-shadow: 0 12px 26px rgba(2,6,23,.10);
+    }
+
+    .grid-2{display:grid; gap:var(--gap); grid-template-columns:1fr;}
+    .toc{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(232,65,66,.06), rgba(255,255,255,.75));
+      border-radius:var(--radius);
+      padding:1rem;
+    }
+    .toc strong{color:#0F172A}
+    .toc ul{margin:.5rem 0 0; padding-left:1.1rem}
+    .toc li{margin:.25rem 0}
+    .toc a{font-weight:950}
+
+    table{width:100%; border-collapse:collapse; overflow:hidden; border-radius:12px}
+    th,td{padding:.9rem; border-bottom:1px solid var(--line)}
+    th{
+      background:rgba(232,65,66,.08);
+      color:#0F172A;
+      text-align:left
+    }
+    tr.highlight{background:rgba(232,65,66,.05)}
+    tr:hover{background:rgba(2,6,23,.02)}
+
+    code, .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .inline-code{
+      display:inline-block;
+      padding:.15rem .35rem;
+      border-radius:8px;
+      border:1px solid var(--line);
+      background:rgba(2,6,23,.03);
+      color:#0F172A;
+      font-weight:900;
+    }
+
+    .callout-grid{
+      display:grid;
+      gap:var(--gap);
+      grid-template-columns:1fr;
+      margin-top: .75rem;
+    }
+    .mini{
+      background:rgba(2,6,23,.02);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:1rem;
+    }
+    .kpi-badges{
+      display:flex; flex-wrap:wrap; gap:.55rem; margin-top:.6rem;
+    }
+    .kpi-badges span{
+      border:1px solid rgba(232,65,66,.20);
+      background:rgba(232,65,66,.06);
+      color:#0F172A;
+      padding:.3rem .55rem;
+      border-radius:999px;
+      font-weight:950;
+      font-size:.9rem;
+    }
+
+    /* SECONDARY IMAGE — do NOT stretch/crop */
+    .content-media{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-top:14px;
+
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:rgba(255,255,255,.75);
+      padding:12px;
+    }
+    .content-img{
+      width:100%;
+      height:auto;
+      max-height:420px;
+      object-fit:contain; /* no stretching/cropping */
+      display:block;
+    }
+
+    .eeat{
+      background:linear-gradient(180deg, rgba(232,65,66,.06), rgba(255,255,255,.75));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:1.25rem;
+      box-shadow: 0 12px 26px rgba(2,6,23,.10);
+    }
+
+    .faq-item{border-bottom:1px solid var(--line); padding: .9rem 0}
+    .faq-button{
+      all:unset; display:flex; justify-content:space-between; align-items:center;
+      width:100%; cursor:pointer; padding:.3rem 0;
+    }
+    .faq-button:focus-visible{outline:2px solid var(--primary)}
+    .faq-button h3{margin:0; font-weight:950}
+    .faq-content{max-height:0; overflow:hidden; transition:max-height .25s ease}
+    .faq-content.open{padding-top:.6rem}
+    .faq-plus{font-weight:950; color:#7F1D1D}
+
+    @media (min-width: 860px){
+      .steps{grid-template-columns: repeat(4, 1fr)}
+      .grid-2{grid-template-columns: 1fr 1fr}
+      .callout-grid{grid-template-columns: 1fr 1fr}
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="hero" role="banner">
+  <div class="container hero-grid">
+    <div class="hero-card" aria-label="Intro">
+      <div class="brand-row">
+        <img class="brand-logo" src="Avalanche_logo.png" alt="Avalanche logo">
+        <div>
+          <div class="muted" style="font-weight:950; letter-spacing:.2px;">Operational Guide</div>
+          <div class="muted-2" style="font-size:.95rem;">Core • Bridge • Fees • Security • Explorers • Troubleshooting</div>
+        </div>
+      </div>
+
+      <h1>Avalanche Bridge</h1>
+      <p class="lead">
+        This is a practical, security-first guide to <strong>Avalanche Bridge</strong>: how to bridge assets into the Avalanche ecosystem using
+        official tools (Core), how fees work (including minimum/maximum bridge fees), what the security model is (SGX / wardens),
+        and how to troubleshoot the most common “stuck transfer / missing funds” cases.
+      </p>
+
+      <!-- ONE CENTERED BUTTON -->
+      <div class="cta-center">
+        <a href="https://core.app/bridge" class="cta" aria-label="Open Avalanche Bridge">
+          Open Avalanche Bridge
+        </a>
+      </div>
+
+      <div class="note">
+        <strong>Quick rule:</strong> bridge a small test amount first. Most losses come from fake sites,
+        wrong network selection, or signing approvals you don’t understand.
+      </div>
+    </div>
+
+    <div class="hero-media" aria-hidden="true">
+      <img class="hero-img" src="avax.png" alt="Avalanche Bridge hero image">
+    </div>
+  </div>
+</header>
+
+<section class="step-guide" aria-labelledby="how-works">
+  <div class="container">
+    <h2 id="how-works">Avalanche Bridge Workflow: Prepare → Bridge → Verify → Use → Exit</h2>
+    <div class="steps" role="list">
+      <article class="step" role="listitem">
+        <div class="icon">①</div>
+        <h3>Prepare for Avalanche Bridge (wallet + network)</h3>
+        <p>
+          Use a trusted wallet (Core is the native option). Confirm you understand the destination chain (usually Avalanche C-Chain for EVM assets).
+        </p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">②</div>
+        <h3>Bridge with Avalanche Bridge (test first)</h3>
+        <p>
+          Use the official bridge UI, confirm networks/tokens, do a small test transfer, then scale.
+        </p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">③</div>
+        <h3>Verify Avalanche Bridge status (explorer-first)</h3>
+        <p>
+          Use explorers to confirm the origin tx and the Avalanche-side mint/arrival. UIs can lag; explorers are the source of truth.
+        </p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">④</div>
+        <h3>Exit Avalanche Bridge cleanly (know the route)</h3>
+        <p>
+          When bridging back, understand fees and timing. Keep gas buffers on both chains to avoid getting stuck.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<main class="container" role="main">
+
+  <section class="card toc" aria-label="Table of Contents">
+    <strong>On this page (Avalanche Bridge):</strong>
+    <ul>
+      <li><a href="#overview">Avalanche Bridge overview (what it is &amp; who it’s for)</a></li>
+      <li><a href="#security">Avalanche Bridge security model (SGX / wardens) explained</a></li>
+      <li><a href="#fees">Avalanche Bridge fees: minimums, maximums, and what else you pay</a></li>
+      <li><a href="#how-to">How to use Avalanche Bridge in Core: step-by-step</a></li>
+      <li><a href="#verify">Avalanche Bridge verification: explorers &amp; what to check</a></li>
+      <li><a href="#mistakes">Avalanche Bridge common mistakes (and how to avoid them)</a></li>
+      <li><a href="#best-practices">Avalanche Bridge best practices: safety checklist</a></li>
+      <li><a href="#troubleshooting">Avalanche Bridge troubleshooting: fixes by symptom</a></li>
+      <li><a href="#eeat">Avalanche Bridge authoritative sources</a></li>
+      <li><a href="#faq">Avalanche Bridge FAQ (deep)</a></li>
+    </ul>
+  </section>
+
+  <section class="card" id="overview">
+    <h2>Avalanche Bridge Overview: What Avalanche Bridge Is (and Why People Use It)</h2>
+    <p>
+      <strong>Avalanche Bridge</strong> is the official bridging solution for moving assets between external chains (most commonly Ethereum,
+      and historically Bitcoin as well) and the Avalanche ecosystem. The bridge is designed to be fast, cost-efficient, and operationally
+      straightforward via the <strong>Core</strong> bridge interface. :contentReference[oaicite:0]{index=0}
+    </p>
+
+    <div class="callout-grid" role="list">
+      <div class="mini" role="listitem">
+        <h3>When Avalanche Bridge is a fit</h3>
+        <p class="muted">
+          You want the “official” path into Avalanche apps, with a well-documented support and troubleshooting flow.
+        </p>
+        <div class="kpi-badges">
+          <span>Official route</span><span>Clear docs</span><span>Explorer-verifiable</span>
+        </div>
+      </div>
+
+      <div class="mini" role="listitem">
+        <h3>Avalanche Bridge operational reality</h3>
+        <p class="muted">
+          Bridging is multi-step and cross-chain. Expect confirmations, fees on both chains, and occasional UI lag.
+        </p>
+        <div class="kpi-badges">
+          <span>Cross-chain</span><span>Confirmations</span><span>Process matters</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Key rule:</strong> Always verify a bridge transfer with an explorer on the origin chain and on Avalanche before taking further action.
+    </div>
+
+    <div class="content-media">
+      <img class="content-img" src="avax2.png" alt="Avalanche Bridge secondary image">
+    </div>
+  </section>
+
+  <section class="card" id="security">
+    <h2>Avalanche Bridge Security Model: SGX / Wardens (Plain English)</h2>
+    <p>
+      The <strong>Avalanche Bridge</strong> security design is commonly described around an Intel SGX enclave plus a set of “wardens”
+      that validate and authorize cross-chain mint/burn flows. The goal is to reduce trust and harden the bridge operator surface. :contentReference[oaicite:1]{index=1}
+    </p>
+
+    <h3>What this means for Avalanche Bridge users</h3>
+    <ul>
+      <li><strong>Security is layered:</strong> bridge behavior is validated before assets are released/minted. :contentReference[oaicite:2]{index=2}</li>
+      <li><strong>Bridging is still risky:</strong> bridges are high-value targets; reduce risk with hygiene (official URLs, small tests, explorer checks).</li>
+      <li><strong>Understand the asset type:</strong> many bridges work by locking on one side and minting a representation on the other. :contentReference[oaicite:3]{index=3}</li>
+    </ul>
+
+    <div class="note">
+      <strong>Practical takeaway:</strong> Your biggest controllable risk is user error (fake sites + malicious approvals). Use bookmarks and verify contracts.
+    </div>
+  </section>
+
+  <section class="card" id="fees">
+    <h2>Avalanche Bridge Fees: Minimums, Maximums, and the “Real” Total Cost</h2>
+    <p>
+      <strong>Avalanche Bridge</strong> fees depend on direction and amount. Official support docs describe percentage fees with
+      minimum and maximum caps (e.g., Ethereum → Avalanche fee % with min/max, and Avalanche → Ethereum fee % with min/max). :contentReference[oaicite:4]{index=4}
+    </p>
+
+    <table aria-label="Avalanche Bridge fee structure concepts">
+      <thead>
+        <tr>
+          <th>Cost component</th>
+          <th>What it is</th>
+          <th>Why it matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>Avalanche Bridge service fee</td>
+          <td>Percentage fee with min/max caps</td>
+          <td>Varies by direction and size :contentReference[oaicite:5]{index=5}</td>
+        </tr>
+        <tr>
+          <td>Origin chain gas</td>
+          <td>Gas on Ethereum/Bitcoin side</td>
+          <td>Often the dominant cost during congestion</td>
+        </tr>
+        <tr>
+          <td>Avalanche gas</td>
+          <td>Gas on Avalanche for receiving/using assets</td>
+          <td>You need AVAX for gas on Avalanche C-Chain</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>Important:</strong> Avalanche Bridge transfers are commonly designed to deliver to the <em>same address</em> on the destination chain—plan wallet selection accordingly. :contentReference[oaicite:6]{index=6}
+    </div>
+  </section>
+
+  <section class="card" id="how-to">
+    <h2>How to Use Avalanche Bridge in Core: Step-by-Step (Safe, Repeatable)</h2>
+    <ol>
+      <li><strong>Open the official Avalanche Bridge UI:</strong> use Core’s bridge page (bookmark it). :contentReference[oaicite:7]{index=7}</li>
+      <li><strong>Connect your wallet:</strong> confirm you’re on the correct account/address.</li>
+      <li><strong>Select direction:</strong> Ethereum → Avalanche (or reverse) and pick the token.</li>
+      <li><strong>Confirm destination address:</strong> read carefully—many official flows use the same address on the destination chain. :contentReference[oaicite:8]{index=8}</li>
+      <li><strong>Do a small test transfer:</strong> wait for completion and verify on explorers.</li>
+      <li><strong>Scale in:</strong> bridge the rest in one or more tranches.</li>
+      <li><strong>Keep gas buffers:</strong> leave ETH for origin gas and AVAX for Avalanche-side actions.</li>
+    </ol>
+
+    <div class="note">
+      <strong>Best practice:</strong> save the tx hashes (origin + destination) in a note. It speeds up troubleshooting dramatically.
+    </div>
+  </section>
+
+  <section class="card" id="verify">
+    <h2>Avalanche Bridge Verification: Explorers and What to Check</h2>
+    <p>
+      When something looks wrong in <strong>Avalanche Bridge</strong>, verify status using explorers. Official support docs recommend
+      checking the tx on the relevant chain explorers (Avalanche explorer / Etherscan / etc.). :contentReference[oaicite:9]{index=9}
+    </p>
+
+    <div class="grid-2">
+      <div class="mini">
+        <h3>Avalanche C-Chain Explorer (Snowtrace / alternatives)</h3>
+        <p class="muted">
+          Use a C-Chain explorer to verify arrival, token contract, and event logs.
+          <br>
+          <a href="https://snowtrace.io/" target="_blank" rel="noopener nofollow">Snowtrace</a>
+          &nbsp;•&nbsp;
+          <a href="https://avascan.info/" target="_blank" rel="noopener nofollow">Avascan</a>
+          :contentReference[oaicite:10]{index=10}
+        </p>
+      </div>
+      <div class="mini">
+        <h3>Origin chain explorer</h3>
+        <p class="muted">
+          For Ethereum-side status use Etherscan; for Bitcoin-side status use a Bitcoin explorer (per official support guidance). :contentReference[oaicite:11]{index=11}
+        </p>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:1rem;">
+      <strong>Verification flow:</strong> address → token transfer events → destination chain transaction → confirm token contract address matches what the UI expected.
+    </div>
+  </section>
+
+  <section class="card" id="mistakes">
+    <h2>Avalanche Bridge Common Mistakes: The Top Causes of “Missing Funds”</h2>
+    <ul>
+      <li><strong>Wrong network:</strong> user bridged successfully, but wallet is still on the wrong chain (Ethereum vs Avalanche C-Chain).</li>
+      <li><strong>Wrong token contract:</strong> fake tokens mimic symbols; always verify contract addresses on explorers.</li>
+      <li><strong>No gas on destination:</strong> you need AVAX for gas to do anything on Avalanche C-Chain (swap, transfer, revoke).</li>
+      <li><strong>Rushing approvals:</strong> malicious approvals are a common loss vector—avoid blind signing.</li>
+      <li><strong>Not checking explorers:</strong> UI lag leads to double-sends; explorers prevent this. :contentReference[oaicite:12]{index=12}</li>
+    </ul>
+
+    <div class="note">
+      <strong>Rule:</strong> if you feel uncertain, stop and verify tx state in explorers before clicking anything else.
+    </div>
+  </section>
+
+  <section class="card" id="best-practices">
+    <h2>Avalanche Bridge Best Practices: Security Checklist (High-Impact)</h2>
+    <ul>
+      <li><strong>Bookmark official Avalanche Bridge entry points</strong> (Core bridge + official support/docs). :contentReference[oaicite:13]{index=13}</li>
+      <li><strong>Test transfer first</strong> (especially on a new device/wallet/browser).</li>
+      <li><strong>Separate wallets:</strong> vault (hardware) vs daily dApp wallet.</li>
+      <li><strong>Minimal approvals + periodic revokes</strong> (reduce blast radius).</li>
+      <li><strong>Keep gas buffers</strong> on both chains for retries and exits.</li>
+      <li><strong>Save tx hashes</strong> (origin + destination) for support and audit trail.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Most avoidable loss:</strong> phishing and malicious approvals. The bridge is rarely the “first failure”—users usually get tricked before bridging.
+    </div>
+  </section>
+
+  <section class="card" id="troubleshooting">
+    <h2>Avalanche Bridge Troubleshooting: Fixes by Symptom</h2>
+
+    <h3>Avalanche Bridge “My funds are missing”</h3>
+    <ul>
+      <li>Check the origin tx hash on the origin chain explorer (Ethereum/Bitcoin).</li>
+      <li>Check your address on a C-Chain explorer (Snowtrace/Avascan). </li>
+      <li>Confirm your wallet is on Avalanche C-Chain and the correct address/account is selected.</li>
+    </ul>
+
+    <h3>Avalanche Bridge “The transaction isn’t visible in the explorer”</h3>
+    <ul>
+      <li>Use the correct explorer for the correct chain (Avalanche explorer vs Etherscan vs Bitcoin explorer). </li>
+      <li>If the tx hash truly does not exist, it may not have broadcast—avoid resending until you confirm the wallet didn’t already submit it.</li>
+    </ul>
+
+    <h3>Avalanche Bridge “Fees are higher than expected”</h3>
+    <ul>
+      <li>Remember you pay bridge fees (with min/max caps) plus origin gas plus Avalanche gas.</li>
+      <li>During Ethereum congestion, origin gas can dominate total cost.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Explorer-first debugging:</strong> if the explorer shows success, your funds are not “lost” — it’s typically a UI/network/account mismatch.
+    </div>
+  </section>
+
+  <section class="eeat" id="eeat" aria-labelledby="eeat-title">
+    <h2 id="eeat-title">Avalanche Bridge Authoritative Sources &amp; References </h2>
+    <p>These are strong, authoritative defaults for Avalanche Bridge research and verification:</p>
+
+    <h3>Official Avalanche Bridge</h3>
+    <ul>
+      <li><a href="https://core.app/bridge" target="_blank" rel="noopener nofollow">Core — Avalanche Bridge</a></li>
+      <li><a href="https://support.avax.network/en/collections/3073022-avalanche-bridge" target="_blank" rel="noopener nofollow">Avalanche Bridge support collection</a> </li>
+      <li><a href="https://support.avax.network/en/articles/5462236-how-do-fees-work-on-the-avalanche-bridge" target="_blank" rel="noopener nofollow">Avalanche Bridge fees (official)</a></li>
+      <li><a href="https://support.avax.network/en/articles/5461988-what-if-my-transaction-is-not-visible-in-the-explorer" target="_blank" rel="noopener nofollow">Tx not visible in explorer (official)</a> </li>
+    </ul>
+
+    <h3>Security / Architecture</h3>
+    <ul>
+      <li><a href="https://medium.com/avalancheavax/avalanche-bridge-secure-cross-chain-asset-transfers-using-intel-sgx-b04f5a4c7ad1" target="_blank" rel="noopener nofollow">Avalanche Bridge and Intel SGX (Ava Labs Medium)</a> </li>
+      <li><a href="https://l2beat.com/bridges/projects/avalanche" target="_blank" rel="noopener nofollow">L2BEAT — Avalanche Bridge overview</a></li>
+    </ul>
+
+    <h3>Explorers</h3>
+    <ul>
+      <li><a href="https://snowtrace.io/" target="_blank" rel="noopener nofollow">Snowtrace (Avalanche C-Chain explorer)</a> </li>
+      <li><a href="https://avascan.info/" target="_blank" rel="noopener nofollow">Avascan (Avalanche explorer)</a> </li>
+    </ul>
+
+    <div class="note">
+      <strong>About:</strong> Prepared by Crypto Finance Experts as a security-first knowledge base for <em>Avalanche Bridge</em>.
+    </div>
+  </section>
+
+  <section class="card faq-section" aria-labelledby="faq">
+    <h2 id="faq">Avalanche Bridge FAQ: The Most Asked Questions (2026)</h2>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f1" id="b1">
+        <h3>What is Avalanche Bridge?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f1" class="faq-content" role="region" aria-labelledby="b1">
+        <p><strong>Avalanche Bridge</strong> is the official bridge used to move assets between external chains (commonly Ethereum, and historically Bitcoin) and the Avalanche ecosystem, with Core providing the primary user interface. </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f2" id="b2">
+        <h3>What is the official Avalanche Bridge website?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f2" class="faq-content" role="region" aria-labelledby="b2">
+        <p>The official bridge experience is available via <strong>Core</strong> at <span class="inline-code">core.app/bridge</span>. Bookmark it to reduce phishing risk. </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f3" id="b3">
+        <h3>How does Avalanche Bridge work (high level)?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f3" class="faq-content" role="region" aria-labelledby="b3">
+        <p>Most token bridges operate by locking assets on one chain and minting a representation on the destination chain (and burning/unlocking on return). L2BEAT summarizes this “lock-and-mint / burn-and-release” model for Avalanche Bridge. </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f4" id="b4">
+        <h3>What is the Avalanche Bridge security model?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f4" class="faq-content" role="region" aria-labelledby="b4">
+        <p>Official Ava Labs materials describe a design leveraging <strong>Intel SGX</strong> enclaves and “wardens” to validate transfers and harden operator trust assumptions. </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f5" id="b5">
+        <h3>How do Avalanche Bridge fees work?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f5" class="faq-content" role="region" aria-labelledby="b5">
+        <p>Official support docs describe percentage-based bridge fees with minimum and maximum caps, and note that you also pay normal network gas fees. </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f6" id="b6">
+        <h3>Do I pay gas fees on both chains when using Avalanche Bridge?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f6" class="faq-content" role="region" aria-labelledby="b6">
+        <p>Yes. You typically pay origin-chain gas (e.g., Ethereum) plus Avalanche-side gas (for using/handling tokens) in addition to any bridge service fee. </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f7" id="b7">
+        <h3>Does Avalanche Bridge require the same address on both networks?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f7" class="faq-content" role="region" aria-labelledby="b7">
+        <p>Official fee documentation notes that Avalanche Bridge “only allows transfers to the same address on the other network” (plan wallet usage accordingly).</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f8" id="b8">
+        <h3>Which Avalanche chain do bridged tokens arrive on?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f8" class="faq-content" role="region" aria-labelledby="b8">
+        <p>Most EVM assets bridged for DeFi use-cases land on <strong>Avalanche C-Chain</strong> (the EVM-compatible chain). Always verify the destination chain and token contract on a C-Chain explorer.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f9" id="b9">
+        <h3>Why don’t my funds show after bridging with Avalanche Bridge?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f9" class="faq-content" role="region" aria-labelledby="b9">
+        <p>Most often: you’re viewing the wrong network/account, the UI is lagging, or you’re not checking the correct explorer. Official support suggests checking the tx on the correct chain explorer (Avalanche vs Ethereum vs Bitcoin). </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f10" id="b10">
+        <h3>What if my Avalanche Bridge transaction is not visible in the explorer?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f10" class="faq-content" role="region" aria-labelledby="b10">
+        <p>Use the correct explorer for the correct chain (Avalanche explorer, Etherscan, or a Bitcoin explorer), as described in official support guidance.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f11" id="b11">
+        <h3>How do I verify an Avalanche Bridge transfer?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f11" class="faq-content" role="region" aria-labelledby="b11">
+        <p>Verify origin tx on the origin explorer and verify destination arrival on a C-Chain explorer (Snowtrace/Avascan). Official docs emphasize explorer checking for visibility issues. :contentReference[oaicite:35]{index=35}</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f12" id="b12">
+        <h3>Do I need AVAX for gas after using Avalanche Bridge?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f12" class="faq-content" role="region" aria-labelledby="b12">
+        <p>Yes. To transact on Avalanche C-Chain (swap, transfer, approve, revoke), you need <strong>AVAX</strong> to pay gas fees. Keep a buffer so you don’t get stuck.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f13" id="b13">
+        <h3>How long does Avalanche Bridge take?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f13" class="faq-content" role="region" aria-labelledby="b13">
+        <p>Timing depends on confirmations and chain conditions. Track progress in the bridge UI and confirm completion in explorers rather than relying on wallet UI alone. </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f14" id="b14">
+        <h3>What are the biggest risks when using Avalanche Bridge?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f14" class="faq-content" role="region" aria-labelledby="b14">
+        <p>The biggest practical risks are phishing/fake bridge sites, malicious token approvals, and user mistakes (wrong network/account). Bridges are also high-value security targets, so use official links and verify everything. </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f15" id="b15">
+        <h3>Can I bridge to a different destination address with Avalanche Bridge?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f15" class="faq-content" role="region" aria-labelledby="b15">
+        <p>Official Avalanche Bridge documentation notes the design constraint that transfers are to the same address on the other network. If you need a different address, you typically bridge to your address first, then transfer on-chain. </p>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="container" role="contentinfo" style="padding:2rem 0; border-top:1px solid var(--line); margin-top:2rem">
+  <p class="muted">© 2026 Avalanche Bridge Guide. Educational content with a security-first operational focus.</p>
+</footer>
+
+
+
+
+
+</body></html>
